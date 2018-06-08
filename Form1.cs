@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace DataGridView_Collapse_Example
 {
@@ -19,39 +20,17 @@ namespace DataGridView_Collapse_Example
 
         void fuelle_Datagrid()
         {
-            DataTable dtstudent = new DataTable();
-            dtstudent.Columns.Add("Student_ID", typeof(int));
-            dtstudent.Columns.Add("Student_Name", typeof(string));
-            dtstudent.Columns.Add("Student_RollNo", typeof(string));
+            const string queryStudent = "SELECT * FROM Test_Student";
+            const string queryMarks = "SELECT * FROM Test_Marks";
 
-            DataTable dtstudentMarks = new DataTable();
-            dtstudentMarks.Columns.Add("Student_ID", typeof(int));
-            dtstudentMarks.Columns.Add("Subject_ID", typeof(int));
-            dtstudentMarks.Columns.Add("Subject_Name", typeof(string));
-            dtstudentMarks.Columns.Add("Marks", typeof(int));
-
-            dtstudent.Rows.Add(111, "Devesh", "03021013014");
-            dtstudent.Rows.Add(222, "ROLI", "0302101444");
-            dtstudent.Rows.Add(333, "ROLI Ji", "030212222");
-            dtstudent.Rows.Add(444, "NIKHIL", "KANPUR");
-
-
-
-            dtstudentMarks.Rows.Add(111, "01", "Physics", 99);
-            dtstudentMarks.Rows.Add(111, "02", "Maths", 77);
-            dtstudentMarks.Rows.Add(111, "03", "C#", 100);
-            dtstudentMarks.Rows.Add(111, "01", "Physics", 99);
-            
-            dtstudentMarks.Rows.Add(222, "01", "Physics", 80);
-            dtstudentMarks.Rows.Add(222, "02", "English", 95);
-            dtstudentMarks.Rows.Add(222, "03", "Commerce", 95);
-            dtstudentMarks.Rows.Add(222, "01", "BankPO", 99);
-
+            DataTable dtstudent = FuelleDataTable(queryStudent);
+            DataTable dtstudentMarks = FuelleDataTable(queryMarks);
+         
             DataSet dsDataset = new DataSet();
             dsDataset.Tables.Add(dtstudent);
             dsDataset.Tables.Add(dtstudentMarks);
 
-            DataRelation Datatablerelation = new DataRelation("DetailsMarks", dsDataset.Tables[0].Columns["Student_ID"], dsDataset.Tables[1].Columns["Student_ID"], true);
+            DataRelation Datatablerelation = new DataRelation("DetailsMarks", dsDataset.Tables[0].Columns["ID"], dsDataset.Tables[1].Columns["StudentID"], true);
             dsDataset.Relations.Add(Datatablerelation);
             dataGrid1.DataSource = dsDataset.Tables[0];
         }
@@ -60,5 +39,29 @@ namespace DataGridView_Collapse_Example
         {
             fuelle_Datagrid();
         }
+
+        private DataTable FuelleDataTable(string query)
+        {
+            //MySqlDataAdapter rueckgabe;
+            DataTable dt = new DataTable();
+
+
+            const string Server = "localhost";
+            const string Username = "test";
+            const string Passwort = "test";
+            const string Database = "test";
+
+            using (MySqlConnection MyCon = new MySqlConnection("Persist Security Info=False;server=" + Server + ";user id=" + Username + ";Password=" + Passwort + ";Connection Timeout = 3000;Allow User Variables=True;ConvertZeroDateTime=true;SslMode=none;database = " + Database))
+            {
+                MyCon.Open();
+                using (MySqlDataAdapter My_DA = new MySqlDataAdapter(query, MyCon))
+                {
+                    My_DA.Fill(dt);
+                }
+                MyCon.Close();
+            }
+            return dt;
+        }
+
     }
 }
