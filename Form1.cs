@@ -20,8 +20,8 @@ namespace DataGridView_Collapse_Example
 
         void fuelle_Datagrid()
         {
-            const string queryStudent = "SELECT * FROM Test_Student";
-            const string queryMarks = "SELECT * FROM Test_Marks";
+            const string queryStudent = "SELECT * FROM Test_Student ORDER BY ID";
+            const string queryMarks = "SELECT * FROM Test_Marks ORDER BY ID";
 
             DataTable dtstudent = FuelleDataTable(queryStudent);
             DataTable dtstudentMarks = FuelleDataTable(queryMarks);
