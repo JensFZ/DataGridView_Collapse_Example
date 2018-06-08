@@ -42,9 +42,7 @@ namespace DataGridView_Collapse_Example
 
         private DataTable FuelleDataTable(string query)
         {
-            //MySqlDataAdapter rueckgabe;
             DataTable dt = new DataTable();
-
 
             const string Server = "localhost";
             const string Username = "test";
