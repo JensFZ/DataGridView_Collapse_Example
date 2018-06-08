@@ -1,1 +1,1 @@
-# DataGridView_Collapse_Example
+# DataGridView Collapse Example
